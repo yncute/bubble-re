@@ -1,49 +1,33 @@
 import { useState } from "react";
 import { useAuth } from "../store/auth-context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
-  const { signIn, signOut, user, loading } = useAuth();
+  const { signIn, user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const onSuccess = () => {
+    navigate("/");
+  };
+
   const handleSignIn = async () => {
     try {
-      await signIn({ email, password });
-      navigate("/dashboard");
+      await signIn({ email, password }, onSuccess);
     } catch (error) {
       console.error("error signing in: ", error);
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("error signing out: ", error);
-    }
-  };
-
   const testGetUser = () => {
-    console.log(user);
+    console.log("user:", user, "\nloading:", loading);
   };
-
-  if (user)
-    return (
-      <div>
-        <button onClick={testGetUser}>get current user</button>
-        <h1>You are already signed in</h1>
-        <Link to={"/dashboard"}>
-          <button>To Dashboard</button>
-        </Link>
-        <button onClick={handleSignOut}>Sign Out</button>
-      </div>
-    );
 
   return (
     <div>
-      <button onClick={testGetUser}>get current user</button>
+      <button onClick={testGetUser}>get user context data</button>
       <h1>Sign In</h1>
       <form className="flex flex-col items-start gap-3">
         <label htmlFor="email">Email</label>

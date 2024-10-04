@@ -8,7 +8,6 @@ import {
 import { auth } from "./config";
 import { LoginFormValues } from "../interfaces/interfaces";
 
-//persists user login after closing/leaving tab
 setPersistence(auth, browserLocalPersistence);
 
 export const firebaseSignIn = async ({ email, password }: LoginFormValues) => {

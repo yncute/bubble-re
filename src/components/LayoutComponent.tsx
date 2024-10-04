@@ -1,13 +1,10 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 
 const LayoutComponent = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <header>Header Content</header>
-      <main>
-        <Outlet /> {children}
-      </main>
+      {children}
       <footer>Footer Content</footer>
     </div>
   );

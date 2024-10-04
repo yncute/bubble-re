@@ -17,28 +17,29 @@ export const AuthContext = createContext<IAuth>({
   signOut: () => {},
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
-
-  //not needed ? bc of ProtectedRoute
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setIsAuthLoading(false);
+      setIsLoading(false);
     });
     return unsubscribe;
   }, []);
 
-  const signUp = (creds: LoginFormValues) => {
+  const signUp = async (creds: LoginFormValues, onSuccess: () => void) => {
     setIsLoading(true);
     firebaseSignUp(creds)
       .then(async (signUpResult) => {
         const { user } = signUpResult; //object destructuring
+        console.log("user on signup:", user);
         if (user) {
           setCurrentUser(user);
+          onSuccess();
         } else {
           //do something if user is empty like an alert
         }
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .catch((error) => {
         //check for error
         if (error.code === "auth/email-already-in-use") {
-          //show an alert or console
+          console.log("Error signing up: email already in use");
         } else if (error.code === "auth/too-many-requests") {
           //do something like an alert
         }
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
-  const signIn = async (creds: LoginFormValues) => {
+  const signIn = async (creds: LoginFormValues, onSuccess: () => void) => {
     setIsLoading(true);
     firebaseSignIn(creds)
       .then((signInResult) => {
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             `signed in successfully with user id: ${user.uid}\n`,
             user
           );
+          onSuccess();
         } else {
           //do something
         }
@@ -107,3 +109,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider value={authValues}>{children}</AuthContext.Provider>
   );
 };
+
+export { AuthProvider };

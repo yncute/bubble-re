@@ -1,7 +1,16 @@
+import { useAuth } from "../store/auth-context";
+
 const Home = () => {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    signOut();
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">public homepage</h1>
+      homepage, user: {user?.displayName}
+      <button onClick={handleSignOut}>Sign Out</button>
     </div>
   );
 };

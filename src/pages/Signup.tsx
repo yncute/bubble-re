@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { useAuth } from "../store/auth-context";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const { signUp, loading } = useAuth();
+  const { signUp, loading, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const onSuccess = () => {
+    navigate("/");
+  };
 
   const handleSignUp = async () => {
-    await signUp({ email, password });
+    try {
+      await signUp({ email, password }, onSuccess);
+      if (user) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

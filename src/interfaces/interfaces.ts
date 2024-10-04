@@ -8,7 +8,7 @@ export interface LoginFormValues {
 export interface IAuth {
   user: User | null; //type User comes from firebase
   loading: boolean;
-  signIn: (creds: LoginFormValues) => void;
-  signUp: (creds: LoginFormValues) => void;
+  signIn: (creds: LoginFormValues, onSuccess: () => void) => void;
+  signUp: (creds: LoginFormValues, onSuccess: () => void) => void;
   signOut: () => void;
 }
